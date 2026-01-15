@@ -18,7 +18,17 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
-        ChangeNotifierProvider(create: (_) => WallpaperProvider()),
+        ChangeNotifierProxyProvider<SettingsProvider, WallpaperProvider>(
+          create: (_) => WallpaperProvider(),
+          update: (_, settings, wp) {
+            final provider = wp ?? WallpaperProvider();
+            // 只有在设置加载完成后才根据 API Key 同步登录状态，避免空 API Key 触发错误
+            if (settings.isInitialized) {
+              provider.syncApiKey(settings.apiKey);
+            }
+            return provider;
+          },
+        ),
       ],
       child: Consumer<SettingsProvider>(
         builder: (context, settings, child) {
@@ -31,13 +41,21 @@ class MyApp extends StatelessWidget {
             ),
             darkTheme: ThemeData(
               brightness: Brightness.dark,
-              primarySwatch: Colors.blue,
-              scaffoldBackgroundColor: const Color(0xFF1a1a1a),
+              primaryColor: const Color(0xFF66BB6A), // Light Green
+              colorScheme: const ColorScheme.dark(
+                primary: Color(0xFF66BB6A),
+                secondary: Color(0xFF66BB6A),
+                surface: Color(0xFF2B3238), // Drawer/Card background
+              ),
+              scaffoldBackgroundColor: const Color(0xFF1E2327), // Main background
               appBarTheme: const AppBarTheme(
-                backgroundColor: Color(0xFF242424),
+                backgroundColor: Color(0xFF2B3238),
                 elevation: 0,
               ),
-              cardColor: const Color(0xFF242424),
+              drawerTheme: const DrawerThemeData(
+                backgroundColor: Color(0xFF2B3238),
+              ),
+              cardColor: const Color(0xFF2B3238),
               useMaterial3: true,
             ),
             themeMode: settings.themeMode,

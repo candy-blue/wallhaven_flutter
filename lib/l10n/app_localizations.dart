@@ -313,6 +313,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Web download not implemented'**
   String get webDownloadNotImplemented;
+
+  /// No description provided for @aiArt.
+  ///
+  /// In en, this message translates to:
+  /// **'Ai Art'**
+  String get aiArt;
+
+  /// No description provided for @loginReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Please set your API Key in Settings to access all features.'**
+  String get loginReminder;
+
+  /// No description provided for @pleaseLoginFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Please login first to use this feature'**
+  String get pleaseLoginFirst;
+
+  /// No description provided for @removedFromFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Removed from favorites'**
+  String get removedFromFavorites;
+
+  /// No description provided for @addedToFavorites.
+  ///
+  /// In en, this message translates to:
+  /// **'Added to favorites'**
+  String get addedToFavorites;
+
+  /// No description provided for @operationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation failed'**
+  String get operationFailed;
+
+  /// No description provided for @cannotOpenLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Cannot open link'**
+  String get cannotOpenLink;
+
+  /// No description provided for @shareFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Share failed'**
+  String get shareFailed;
+
+  /// No description provided for @downloadPath.
+  ///
+  /// In en, this message translates to:
+  /// **'Download Path'**
+  String get downloadPath;
+
+  /// No description provided for @defaultDownloadsFolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Default (Downloads folder)'**
+  String get defaultDownloadsFolder;
+
+  /// No description provided for @tapIconToChange.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap icon to change'**
+  String get tapIconToChange;
 }
 
 class _AppLocalizationsDelegate

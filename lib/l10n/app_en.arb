@@ -34,5 +34,16 @@
   "downloading": "Downloading...",
   "downloadedTo": "Downloaded to {path}",
   "savedToGallery": "Saved to Gallery!",
-  "webDownloadNotImplemented": "Web download not implemented"
+  "webDownloadNotImplemented": "Web download not implemented",
+  "aiArt": "Ai Art",
+  "loginReminder": "Please set your API Key in Settings to access all features.",
+  "pleaseLoginFirst": "Please login first to use this feature",
+  "removedFromFavorites": "Removed from favorites",
+  "addedToFavorites": "Added to favorites",
+  "operationFailed": "Operation failed",
+  "cannotOpenLink": "Cannot open link",
+  "shareFailed": "Share failed",
+  "downloadPath": "Download Path",
+  "defaultDownloadsFolder": "Default (Downloads folder)",
+  "tapIconToChange": "Tap icon to change"
 }

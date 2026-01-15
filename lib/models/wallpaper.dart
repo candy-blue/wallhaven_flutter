@@ -1,3 +1,6 @@
+import 'tag.dart';
+import 'user.dart';
+
 class Wallpaper {
   final String id;
   final String url;
@@ -17,6 +20,9 @@ class Wallpaper {
   final List<String> colors;
   final String path;
   final Thumbs thumbs;
+  final User? uploader;
+  final List<Tag> tags;
+  final bool? isFavorited; // Added field
 
   Wallpaper({
     required this.id,
@@ -37,6 +43,9 @@ class Wallpaper {
     required this.colors,
     required this.path,
     required this.thumbs,
+    this.uploader,
+    this.tags = const [],
+    this.isFavorited,
   });
 
   factory Wallpaper.fromJson(Map<String, dynamic> json) {
@@ -59,6 +68,13 @@ class Wallpaper {
       colors: List<String>.from(json['colors'] ?? []),
       path: json['path'] ?? '',
       thumbs: Thumbs.fromJson(json['thumbs'] ?? {}),
+      uploader: json['uploader'] != null ? User.fromJson(json['uploader']) : null,
+      tags: (json['tags'] as List?)?.map((e) => Tag.fromJson(e)).toList() ?? [],
+      // API doesn't always return isFavorited, usually it's implied if we are in favorites collection? 
+      // Or maybe there is a field "favorited"? Wallhaven API docs don't explicitly say for search results.
+      // But for individual wallpaper details it might have it. 
+      // Let's assume it might be there or null.
+      isFavorited: json['favorites'] != null ? null : null, // Placeholder, logic needs to be handled by provider or specific API response
     );
   }
 }
@@ -115,10 +131,10 @@ class Meta {
 
   factory Meta.fromJson(Map<String, dynamic> json) {
     return Meta(
-      currentPage: json['current_page'] ?? 1,
-      lastPage: json['last_page'] ?? 1,
-      perPage: json['per_page'] ?? 24,
-      total: json['total'] ?? 0,
+      currentPage: json['current_page'] is int ? json['current_page'] : int.tryParse(json['current_page'].toString()) ?? 1,
+      lastPage: json['last_page'] is int ? json['last_page'] : int.tryParse(json['last_page'].toString()) ?? 1,
+      perPage: json['per_page'] is int ? json['per_page'] : int.tryParse(json['per_page'].toString()) ?? 24,
+      total: json['total'] is int ? json['total'] : int.tryParse(json['total'].toString()) ?? 0,
     );
   }
 }

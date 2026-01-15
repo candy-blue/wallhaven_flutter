@@ -117,4 +117,37 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get webDownloadNotImplemented => '网页版下载暂未实现';
+
+  @override
+  String get aiArt => 'AI 绘画';
+
+  @override
+  String get loginReminder => '请在设置中配置 API Key 以解锁全部功能。';
+
+  @override
+  String get pleaseLoginFirst => '请先登录以使用此功能';
+
+  @override
+  String get removedFromFavorites => '已取消收藏';
+
+  @override
+  String get addedToFavorites => '已添加到收藏';
+
+  @override
+  String get operationFailed => '操作失败';
+
+  @override
+  String get cannotOpenLink => '无法打开链接';
+
+  @override
+  String get shareFailed => '分享失败';
+
+  @override
+  String get downloadPath => '下载路径';
+
+  @override
+  String get defaultDownloadsFolder => '默认 (下载文件夹)';
+
+  @override
+  String get tapIconToChange => '点击图标修改';
 }

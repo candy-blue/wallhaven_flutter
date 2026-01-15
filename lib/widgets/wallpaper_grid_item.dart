@@ -10,6 +10,18 @@ class WallpaperGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Color borderColor = Colors.transparent;
+    if (wallpaper.purity == 'sketchy') {
+      borderColor = Colors.yellowAccent;
+    } else if (wallpaper.purity == 'nsfw') {
+      borderColor = Colors.redAccent;
+    } else {
+      // SFW - explicit green as requested, or keep transparent? 
+      // User said "different colored borders for different ratings", implying all have borders.
+      // Wallhaven site uses green for SFW in some contexts.
+      borderColor = Colors.greenAccent; 
+    }
+
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -20,7 +32,10 @@ class WallpaperGridItem extends StatelessWidget {
         );
       },
       child: Card(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+          side: BorderSide(color: borderColor, width: 2),
+        ),
         clipBehavior: Clip.antiAlias,
         child: Stack(
           fit: StackFit.expand,
@@ -57,20 +72,35 @@ class WallpaperGridItem extends StatelessWidget {
                       wallpaper.resolution,
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 10,
+                        fontSize: 14,
                         fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 2.0,
+                            color: Colors.black,
+                            offset: Offset(1.0, 1.0),
+                          ),
+                        ],
                       ),
                     ),
                     if (wallpaper.favorites > 0)
                       Row(
                         children: [
-                          const Icon(Icons.favorite, color: Colors.red, size: 10),
-                          const SizedBox(width: 2),
+                          const Icon(Icons.favorite, color: Colors.red, size: 16),
+                          const SizedBox(width: 4),
                           Text(
                             '${wallpaper.favorites}',
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 10,
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              shadows: [
+                                Shadow(
+                                  blurRadius: 2.0,
+                                  color: Colors.black,
+                                  offset: Offset(1.0, 1.0),
+                                ),
+                              ],
                             ),
                           ),
                         ],

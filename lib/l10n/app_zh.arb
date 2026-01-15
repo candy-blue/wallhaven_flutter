@@ -34,5 +34,16 @@
   "downloading": "下载中...",
   "downloadedTo": "已下载至 {path}",
   "savedToGallery": "已保存到相册!",
-  "webDownloadNotImplemented": "网页版下载暂未实现"
+  "webDownloadNotImplemented": "网页版下载暂未实现",
+  "aiArt": "AI 绘画",
+  "loginReminder": "请在设置中配置 API Key 以解锁全部功能。",
+  "pleaseLoginFirst": "请先登录以使用此功能",
+  "removedFromFavorites": "已取消收藏",
+  "addedToFavorites": "已添加到收藏",
+  "operationFailed": "操作失败",
+  "cannotOpenLink": "无法打开链接",
+  "shareFailed": "分享失败",
+  "downloadPath": "下载路径",
+  "defaultDownloadsFolder": "默认 (下载文件夹)",
+  "tapIconToChange": "点击图标修改"
 }

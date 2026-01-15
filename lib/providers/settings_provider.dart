@@ -5,14 +5,20 @@ class SettingsProvider with ChangeNotifier {
   static const String _apiKeyKey = 'api_key';
   static const String _languageKey = 'language_code';
   static const String _themeKey = 'theme_mode';
+  static const String _downloadPathKey = 'download_path';
 
   String _apiKey = '';
   Locale _locale = const Locale('en');
   ThemeMode _themeMode = ThemeMode.system;
+  String? _downloadPath;
 
   String get apiKey => _apiKey;
+
+  bool _initialized = false;
+  bool get isInitialized => _initialized;
   Locale get locale => _locale;
   ThemeMode get themeMode => _themeMode;
+  String? get downloadPath => _downloadPath;
 
   SettingsProvider() {
     _loadSettings();
@@ -29,6 +35,8 @@ class SettingsProvider with ChangeNotifier {
     if (themeIndex != null && themeIndex >= 0 && themeIndex < ThemeMode.values.length) {
       _themeMode = ThemeMode.values[themeIndex];
     }
+    _downloadPath = prefs.getString(_downloadPathKey);
+    _initialized = true;
     notifyListeners();
   }
 
@@ -50,6 +58,17 @@ class SettingsProvider with ChangeNotifier {
     _themeMode = mode;
     final prefs = await SharedPreferences.getInstance();
     await prefs.setInt(_themeKey, mode.index);
+    notifyListeners();
+  }
+
+  Future<void> setDownloadPath(String? path) async {
+    _downloadPath = path;
+    final prefs = await SharedPreferences.getInstance();
+    if (path != null) {
+      await prefs.setString(_downloadPathKey, path);
+    } else {
+      await prefs.remove(_downloadPathKey);
+    }
     notifyListeners();
   }
 }

@@ -117,4 +117,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get webDownloadNotImplemented => 'Web download not implemented';
+
+  @override
+  String get aiArt => 'Ai Art';
+
+  @override
+  String get loginReminder =>
+      'Please set your API Key in Settings to access all features.';
+
+  @override
+  String get pleaseLoginFirst => 'Please login first to use this feature';
+
+  @override
+  String get removedFromFavorites => 'Removed from favorites';
+
+  @override
+  String get addedToFavorites => 'Added to favorites';
+
+  @override
+  String get operationFailed => 'Operation failed';
+
+  @override
+  String get cannotOpenLink => 'Cannot open link';
+
+  @override
+  String get shareFailed => 'Share failed';
+
+  @override
+  String get downloadPath => 'Download Path';
+
+  @override
+  String get defaultDownloadsFolder => 'Default (Downloads folder)';
+
+  @override
+  String get tapIconToChange => 'Tap icon to change';
 }

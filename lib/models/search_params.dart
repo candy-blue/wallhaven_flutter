@@ -8,6 +8,7 @@ class SearchParams {
   String? colors;
   int page;
   String? seed; // For random sorting
+  int aiArtFilter; // 1 = filter out AI, 0 = show AI
 
   SearchParams({
     this.q = '',
@@ -19,6 +20,7 @@ class SearchParams {
     this.colors,
     this.page = 1,
     this.seed,
+    this.aiArtFilter = 1,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +31,7 @@ class SearchParams {
       'sorting': sorting,
       'order': order,
       'page': page,
+      'ai_art_filter': aiArtFilter,
     };
     
     if (sorting == 'toplist') {
