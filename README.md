@@ -1,5 +1,7 @@
 # Wallhaven Flutter
 
+[English](README.md) | [中文](README_ZH.md)
+
 A cross-platform Wallhaven client built with Flutter, supporting Android, iOS, Windows, Linux, and Web.
 
 Based on the [Wallhaven API](https://wallhaven.cc/help/api) and inspired by [leoFitz1024/wallhaven](https://github.com/leoFitz1024/wallhaven).
