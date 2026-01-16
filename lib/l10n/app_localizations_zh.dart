@@ -27,6 +27,18 @@ class AppLocalizationsZh extends AppLocalizations {
   String get enterApiKey => '输入您的 Wallhaven API Key';
 
   @override
+  String get username => '用户名';
+
+  @override
+  String get enterUsername => '输入您的 Wallhaven 用户名';
+
+  @override
+  String get usernameRequiredForCollections => '查看收藏夹需要输入用户名';
+
+  @override
+  String get pleaseEnterUsername => '请在设置中输入用户名';
+
+  @override
   String get save => '保存';
 
   @override

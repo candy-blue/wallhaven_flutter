@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../providers/wallpaper_provider.dart';
+import '../providers/settings_provider.dart';
 import '../widgets/wallpaper_grid_item.dart';
 import '../widgets/filter_toolbar.dart';
 import 'settings_screen.dart';
@@ -111,17 +112,32 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: _showSearchBar
-            ? TextField(
-                controller: _searchController,
-                autofocus: true,
-                decoration: InputDecoration(
-                  hintText: l10n.searchHint,
-                  border: InputBorder.none,
-                  hintStyle: const TextStyle(color: Colors.white70),
-                ),
-                style: const TextStyle(color: Colors.white),
-                onSubmitted: (value) {
-                  context.read<WallpaperProvider>().setSearchQuery(value);
+            ? LayoutBuilder(
+                builder: (context, constraints) {
+                  // Calculate available width based on screen size
+                  final screenWidth = MediaQuery.of(context).size.width;
+                  // Each action button is approximately 56px wide
+                  final actionsWidth = 56.0 * 2; // Two action buttons
+                  // Calculate available width: screen width minus actions and padding
+                  final availableWidth = screenWidth - actionsWidth - 32; // 32 for padding
+                  return SizedBox(
+                    width: availableWidth > 0 ? availableWidth : screenWidth * 0.7,
+                    child: TextField(
+                      controller: _searchController,
+                      autofocus: true,
+                      decoration: InputDecoration(
+                        hintText: l10n.searchHint,
+                        border: InputBorder.none,
+                        hintStyle: const TextStyle(color: Colors.white70),
+                        isDense: true,
+                        contentPadding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                      ),
+                      style: const TextStyle(color: Colors.white),
+                      onSubmitted: (value) {
+                        context.read<WallpaperProvider>().setSearchQuery(value);
+                      },
+                    ),
+                  );
                 },
               )
             : Text(l10n.appTitle),
@@ -191,32 +207,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildDrawer(BuildContext context, AppLocalizations l10n) {
     return Drawer(
-      child: Consumer<WallpaperProvider>(
-        builder: (context, provider, child) {
+      child: Consumer2<WallpaperProvider, SettingsProvider>(
+        builder: (context, provider, settings, child) {
           final sorting = provider.params.sorting;
-          final categories = provider.params.categories;
-          final purity = provider.params.purity;
           final theme = Theme.of(context);
           final activeColor = theme.primaryColor;
 
           return ListView(
             padding: EdgeInsets.zero,
             children: [
-              UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: theme.appBarTheme.backgroundColor),
-                accountName: Text(
-                  provider.isLoggedIn ? (provider.username ?? 'User') : 'Guest',
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                ),
-                accountEmail: Text(
-                  provider.isLoggedIn ? 'Logged in' : 'Login in Settings',
-                  style: const TextStyle(color: Colors.white70),
-                ),
-                currentAccountPicture: const CircleAvatar(
-                  backgroundColor: Colors.white,
-                  child: Icon(Icons.person, color: Colors.grey),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                 child: Text(
@@ -283,7 +282,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 activeColor: activeColor,
               ),
               
-              if (provider.isLoggedIn && provider.collections.isNotEmpty) ...[
+              // 只有输入了用户名才显示收藏夹
+              if (provider.isLoggedIn && 
+                  provider.collections.isNotEmpty && 
+                  settings.username.isNotEmpty) ...[
                  const Divider(),
                  Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
@@ -301,17 +303,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     text: collection.label,
                     isSelected: false, // TODO: track selected collection
                     onTap: () async {
-                      if (provider.username != null) {
-                        await provider.switchToCollection(collection.id, provider.username!);
+                      try {
+                        // 从设置中获取用户名
+                        final username = settings.username;
+                        if (username.isEmpty) {
+                          if (context.mounted) {
+                            final l10n = AppLocalizations.of(context)!;
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(l10n.pleaseEnterUsername),
+                                backgroundColor: Colors.orange,
+                              ),
+                            );
+                          }
+                          return;
+                        }
+                        await provider.switchToCollection(collection.id, username);
                         if (context.mounted) {
                           Navigator.pop(context);
                         }
-                      } else {
-                         if (context.mounted) {
-                           ScaffoldMessenger.of(context).showSnackBar(
-                             const SnackBar(content: Text('Username not found, please relogin')),
-                           );
-                         }
+                      } catch (e) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('Failed to load collection: $e'),
+                              backgroundColor: Colors.red,
+                            ),
+                          );
+                        }
                       }
                     },
                     activeColor: activeColor,

@@ -54,43 +54,29 @@ class _FilterToolbarState extends State<FilterToolbar> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    
-    // Base style for buttons
-    final buttonStyle = ElevatedButton.styleFrom(
-      backgroundColor: isDark ? Colors.grey[800] : Colors.grey[200],
-      foregroundColor: isDark ? Colors.white : Colors.black,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-      minimumSize: const Size(0, 36),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-      elevation: 0,
-    );
 
     return Container(
       width: double.infinity,
       color: theme.scaffoldBackgroundColor,
       padding: const EdgeInsets.symmetric(vertical: 8),
-      constraints: const BoxConstraints(minHeight: 50, minWidth: 800), // Minimum size constraints
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
         child: Row(
           children: [
-            // Categories
-            _buildButtonGroup([
-              _buildCategoryButton(l10n.general, 0),
-              _buildCategoryButton(l10n.anime, 1),
-              _buildCategoryButton(l10n.people, 2),
-            ]),
-            
-            const SizedBox(width: 8),
-            
             // Purity
             _buildButtonGroup([
               _buildPurityButton(l10n.sfw, 0, const Color(0xFF429842)),
               _buildPurityButton(l10n.sketchy, 1, const Color(0xFFC4A000)),
               _buildPurityButton(l10n.nsfw, 2, const Color(0xFFCC3333)),
             ]),
+
+            const SizedBox(width: 8),
+
+            // Resolution Dropdown
+            _buildResolutionDropdown(l10n),
 
             const SizedBox(width: 8),
 
@@ -175,6 +161,8 @@ class _FilterToolbarState extends State<FilterToolbar> {
             ),
           ],
         ),
+          );
+        },
       ),
     );
   }
@@ -187,6 +175,7 @@ class _FilterToolbarState extends State<FilterToolbar> {
     required ValueChanged<String?> onChanged,
     IconData? icon,
     String? activeLabel,
+    bool isMultiSelect = false,
   }) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 2),
@@ -201,12 +190,25 @@ class _FilterToolbarState extends State<FilterToolbar> {
         offset: const Offset(0, 40),
         itemBuilder: (context) => items.map((item) {
           final itemLabel = itemLabels?[item] ?? item;
+          final isSelected = isMultiSelect && value != null && value.split(',').contains(item);
           return PopupMenuItem(
             value: item,
-            child: Text(itemLabel),
+            child: Row(
+              children: [
+                if (isMultiSelect)
+                  Icon(
+                    isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                    size: 18,
+                  )
+                else
+                  const SizedBox.shrink(),
+                if (isMultiSelect) const SizedBox(width: 8),
+                Expanded(child: Text(itemLabel)),
+              ],
+            ),
           );
         }).toList(),
-        onSelected: onChanged,
+        onSelected: isMultiSelect ? (_) {} : onChanged,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
@@ -240,7 +242,7 @@ class _FilterToolbarState extends State<FilterToolbar> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
-        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+        border: Border.all(color: Colors.grey.withOpacity(0.1)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -249,18 +251,75 @@ class _FilterToolbarState extends State<FilterToolbar> {
     );
   }
 
-  Widget _buildCategoryButton(String label, int index) {
-    final isSelected = _tempParams.categories[index] == '1';
-    return _buildToggleButton(
-      label: label,
-      isSelected: isSelected,
-      onTap: () {
-        _updateState(() {
-          final chars = _tempParams.categories.split('');
-          chars[index] = isSelected ? '0' : '1';
-          _tempParams.categories = chars.join('');
-        });
-      },
+  Widget _buildResolutionDropdown(AppLocalizations l10n) {
+    // Common resolutions
+    final resolutions = [
+      '1920x1080', '2560x1440', '3840x2160', '2560x1080', '3440x1440',
+      '3840x1600', '1280x720', '1600x900', '1920x1200', '2560x1600',
+      '3840x2400', '1280x960', '1600x1200', '1920x1440', '2560x1920',
+      '3840x2880', '1280x1024', '1600x1280', '1920x1536', '2560x2048',
+      '3840x3072'
+    ];
+    
+    final activeLabel = _tempParams.resolutions != null && _tempParams.resolutions!.isNotEmpty
+        ? (_tempParams.resolutions!.split(',').length > 1 
+            ? '${_tempParams.resolutions!.split(',').length} selected'
+            : _tempParams.resolutions)
+        : null;
+
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 2),
+      decoration: BoxDecoration(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.grey.withOpacity(0.3)),
+      ),
+      child: PopupMenuButton<String>(
+        tooltip: l10n.resolution,
+        offset: const Offset(0, 40),
+        itemBuilder: (context) => resolutions.map((item) {
+          final current = _tempParams.resolutions?.split(',').where((e) => e.isNotEmpty).toSet() ?? <String>{};
+          final isSelected = current.contains(item);
+          return PopupMenuItem(
+            value: item,
+            child: Row(
+              children: [
+                Icon(
+                  isSelected ? Icons.check_box : Icons.check_box_outline_blank,
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Text(item),
+              ],
+            ),
+          );
+        }).toList(),
+        onSelected: (val) {
+          _updateState(() {
+            // Toggle resolution
+            final current = _tempParams.resolutions?.split(',').where((e) => e.isNotEmpty).toSet() ?? <String>{};
+            if (current.contains(val)) {
+              current.remove(val);
+            } else {
+              current.add(val);
+            }
+            _tempParams.resolutions = current.isEmpty ? null : current.join(',');
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.aspect_ratio, size: 16),
+              const SizedBox(width: 4),
+              Text(activeLabel ?? l10n.resolution),
+              const SizedBox(width: 4),
+              const Icon(Icons.arrow_drop_down, size: 18),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -268,10 +327,8 @@ class _FilterToolbarState extends State<FilterToolbar> {
     // Purity string might be shorter if not all options available, but usually 3 chars '100'
     // Default to '0' if out of bounds
     final isSelected = index < _tempParams.purity.length && _tempParams.purity[index] == '1';
-    return _buildToggleButton(
-      label: label,
-      isSelected: isSelected,
-      activeColor: activeColor,
+    
+    return InkWell(
       onTap: () {
         _updateState(() {
           // Ensure string is long enough
@@ -284,6 +341,37 @@ class _FilterToolbarState extends State<FilterToolbar> {
           _tempParams.purity = chars.join('');
         });
       },
+      borderRadius: BorderRadius.circular(4),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 150),
+        curve: Curves.easeInOut,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        decoration: BoxDecoration(
+          color: isSelected ? activeColor : Colors.transparent,
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color: isSelected ? activeColor : Colors.grey.withOpacity(0.1),
+            width: 1,
+          ),
+          boxShadow: isSelected 
+              ? [
+                  BoxShadow(
+                    color: activeColor.withOpacity(0.3),
+                    blurRadius: 4,
+                    spreadRadius: 0,
+                  )
+                ]
+              : null,
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+            color: isSelected ? Colors.white : Theme.of(context).textTheme.bodyLarge?.color?.withOpacity(0.8) ?? Colors.grey[400],
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontSize: 13,
+          ),
+        ),
+      ),
     );
   }
 

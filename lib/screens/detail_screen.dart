@@ -271,16 +271,6 @@ class _DetailScreenState extends State<DetailScreen> {
                     if (_wallpaper.uploader != null)
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: GestureDetector(
-                          onTap: () {
-                             context.read<WallpaperProvider>().setSearchQuery('@${_wallpaper.uploader!.username}');
-                             Navigator.of(context).popUntil((route) => route.isFirst);
-                          },
-                          child: CircleAvatar(
-                            backgroundImage: NetworkImage(_wallpaper.uploader!.avatar),
-                            backgroundColor: Colors.grey,
-                          ),
-                        ),
                         title: GestureDetector(
                           onTap: () {
                              context.read<WallpaperProvider>().setSearchQuery('@${_wallpaper.uploader!.username}');

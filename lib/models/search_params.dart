@@ -7,6 +7,7 @@ class SearchParams {
   String topRange; // 1d, 3d, 1w, 1M, 3M, 6M, 1y
   String? colors;
   String? ratios; // 16x9,16x10 etc
+  String? resolutions; // 1920x1080,2560x1440 etc
   int page;
   String? seed; // For random sorting
   int aiArtFilter; // 1 = filter out AI, 0 = show AI
@@ -20,6 +21,7 @@ class SearchParams {
     this.topRange = '1M',
     this.colors,
     this.ratios,
+    this.resolutions,
     this.page = 1,
     this.seed,
     this.aiArtFilter = 1,
@@ -36,6 +38,7 @@ class SearchParams {
       topRange: topRange,
       colors: colors,
       ratios: ratios,
+      resolutions: resolutions,
       page: page,
       seed: seed,
       aiArtFilter: aiArtFilter,
@@ -63,6 +66,10 @@ class SearchParams {
 
     if (ratios != null && ratios!.isNotEmpty) {
       data['ratios'] = ratios;
+    }
+
+    if (resolutions != null && resolutions!.isNotEmpty) {
+      data['resolutions'] = resolutions;
     }
 
     if (sorting == 'random' && seed != null) {

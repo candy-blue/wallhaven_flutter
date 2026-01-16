@@ -134,6 +134,30 @@ abstract class AppLocalizations {
   /// **'Enter your Wallhaven API Key'**
   String get enterApiKey;
 
+  /// No description provided for @username.
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// No description provided for @enterUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your Wallhaven username'**
+  String get enterUsername;
+
+  /// No description provided for @usernameRequiredForCollections.
+  ///
+  /// In en, this message translates to:
+  /// **'Required to view collections'**
+  String get usernameRequiredForCollections;
+
+  /// No description provided for @pleaseEnterUsername.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter username in settings'**
+  String get pleaseEnterUsername;
+
   /// No description provided for @save.
   ///
   /// In en, this message translates to:

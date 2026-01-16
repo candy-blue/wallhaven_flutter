@@ -27,6 +27,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get enterApiKey => 'Enter your Wallhaven API Key';
 
   @override
+  String get username => 'Username';
+
+  @override
+  String get enterUsername => 'Enter your Wallhaven username';
+
+  @override
+  String get usernameRequiredForCollections => 'Required to view collections';
+
+  @override
+  String get pleaseEnterUsername => 'Please enter username in settings';
+
+  @override
   String get save => 'Save';
 
   @override

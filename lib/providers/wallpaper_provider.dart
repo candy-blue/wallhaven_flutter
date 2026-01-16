@@ -48,9 +48,13 @@ class WallpaperProvider with ChangeNotifier {
 
   Future<void> _verifyLogin() async {
     try {
+      // 先尝试获取用户设置来验证API key是否有效
       final settings = await _api.getUserSettings();
-      _username = settings['username'];
+      // settings端点可能不返回username，但API key有效说明已登录
+      _username = settings['username'] as String?;
       _isLoggedIn = true;
+      
+      // 获取用户收藏夹列表
       await _fetchUserCollections();
     } catch (e) {
       _isLoggedIn = false;
