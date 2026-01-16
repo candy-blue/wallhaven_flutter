@@ -78,7 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         await context
                             .read<SettingsProvider>()
                             .setApiKey(key);
-                        
+
                         if (context.mounted) {
                           try {
                             await context.read<WallpaperProvider>().updateApiKey(key);
@@ -107,7 +107,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Download Path Section
           Card(
             child: Padding(
@@ -151,7 +151,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    value: settings.locale.languageCode,
+                    initialValue: settings.locale.languageCode,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
@@ -184,7 +184,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<ThemeMode>(
-                    value: settings.themeMode,
+                    initialValue: settings.themeMode,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),

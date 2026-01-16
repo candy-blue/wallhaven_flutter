@@ -379,6 +379,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Tap icon to change'**
   String get tapIconToChange;
+
+  /// No description provided for @ratios.
+  ///
+  /// In en, this message translates to:
+  /// **'Ratios'**
+  String get ratios;
+
+  /// No description provided for @colors.
+  ///
+  /// In en, this message translates to:
+  /// **'Colors'**
+  String get colors;
+
+  /// No description provided for @order.
+  ///
+  /// In en, this message translates to:
+  /// **'Order'**
+  String get order;
+
+  /// No description provided for @topRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Toplist Range'**
+  String get topRange;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @asc.
+  ///
+  /// In en, this message translates to:
+  /// **'Ascending'**
+  String get asc;
+
+  /// No description provided for @desc.
+  ///
+  /// In en, this message translates to:
+  /// **'Descending'**
+  String get desc;
+
+  /// No description provided for @lastDay.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Day'**
+  String get lastDay;
+
+  /// No description provided for @last3Days.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Days'**
+  String get last3Days;
+
+  /// No description provided for @lastWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Week'**
+  String get lastWeek;
+
+  /// No description provided for @lastMonth.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Month'**
+  String get lastMonth;
+
+  /// No description provided for @last3Months.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 3 Months'**
+  String get last3Months;
+
+  /// No description provided for @last6Months.
+  ///
+  /// In en, this message translates to:
+  /// **'Last 6 Months'**
+  String get last6Months;
+
+  /// No description provided for @lastYear.
+  ///
+  /// In en, this message translates to:
+  /// **'Last Year'**
+  String get lastYear;
 }
 
 class _AppLocalizationsDelegate

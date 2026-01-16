@@ -45,5 +45,20 @@
   "shareFailed": "分享失败",
   "downloadPath": "下载路径",
   "defaultDownloadsFolder": "默认 (下载文件夹)",
-  "tapIconToChange": "点击图标修改"
+  "tapIconToChange": "点击图标修改",
+  "ratios": "比例",
+  "colors": "颜色",
+  "order": "顺序",
+  "topRange": "排行范围",
+  "apply": "应用",
+  "reset": "重置",
+  "asc": "升序",
+  "desc": "降序",
+  "lastDay": "最近1天",
+  "last3Days": "最近3天",
+  "lastWeek": "最近1周",
+  "lastMonth": "最近1月",
+  "last3Months": "最近3月",
+  "last6Months": "最近6月",
+  "lastYear": "最近1年"
 }

@@ -45,5 +45,20 @@
   "shareFailed": "Share failed",
   "downloadPath": "Download Path",
   "defaultDownloadsFolder": "Default (Downloads folder)",
-  "tapIconToChange": "Tap icon to change"
+  "tapIconToChange": "Tap icon to change",
+  "ratios": "Ratios",
+  "colors": "Colors",
+  "order": "Order",
+  "topRange": "Toplist Range",
+  "apply": "Apply",
+  "reset": "Reset",
+  "asc": "Ascending",
+  "desc": "Descending",
+  "lastDay": "Last Day",
+  "last3Days": "Last 3 Days",
+  "lastWeek": "Last Week",
+  "lastMonth": "Last Month",
+  "last3Months": "Last 3 Months",
+  "last6Months": "Last 6 Months",
+  "lastYear": "Last Year"
 }

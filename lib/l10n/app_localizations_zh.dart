@@ -150,4 +150,49 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get tapIconToChange => '点击图标修改';
+
+  @override
+  String get ratios => '比例';
+
+  @override
+  String get colors => '颜色';
+
+  @override
+  String get order => '顺序';
+
+  @override
+  String get topRange => '排行范围';
+
+  @override
+  String get apply => '应用';
+
+  @override
+  String get reset => '重置';
+
+  @override
+  String get asc => '升序';
+
+  @override
+  String get desc => '降序';
+
+  @override
+  String get lastDay => '最近1天';
+
+  @override
+  String get last3Days => '最近3天';
+
+  @override
+  String get lastWeek => '最近1周';
+
+  @override
+  String get lastMonth => '最近1月';
+
+  @override
+  String get last3Months => '最近3月';
+
+  @override
+  String get last6Months => '最近6月';
+
+  @override
+  String get lastYear => '最近1年';
 }

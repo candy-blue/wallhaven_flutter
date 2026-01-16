@@ -151,4 +151,49 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tapIconToChange => 'Tap icon to change';
+
+  @override
+  String get ratios => 'Ratios';
+
+  @override
+  String get colors => 'Colors';
+
+  @override
+  String get order => 'Order';
+
+  @override
+  String get topRange => 'Toplist Range';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get asc => 'Ascending';
+
+  @override
+  String get desc => 'Descending';
+
+  @override
+  String get lastDay => 'Last Day';
+
+  @override
+  String get last3Days => 'Last 3 Days';
+
+  @override
+  String get lastWeek => 'Last Week';
+
+  @override
+  String get lastMonth => 'Last Month';
+
+  @override
+  String get last3Months => 'Last 3 Months';
+
+  @override
+  String get last6Months => 'Last 6 Months';
+
+  @override
+  String get lastYear => 'Last Year';
 }

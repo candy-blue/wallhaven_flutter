@@ -3,8 +3,11 @@ import 'package:provider/provider.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import '../providers/wallpaper_provider.dart';
 import '../widgets/wallpaper_grid_item.dart';
+import '../widgets/filter_toolbar.dart';
 import 'settings_screen.dart';
 import '../l10n/app_localizations.dart';
+
+import 'filter_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -56,13 +59,24 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void _checkLoadMore() {
+  Future<void> _checkLoadMore({int loadedCount = 0}) async {
     if (!mounted) return;
+    // Limit to 5 pages max to avoid infinite loops
+    if (loadedCount >= 5) return;
+
+    // Wait for layout to update
+    await Future.delayed(const Duration(milliseconds: 100));
+    if (!mounted) return;
+
     // Simple check: if maxScrollExtent is small (less than screen height), try loading more
-    // A better way is checking if content height < viewport height
-    if (_scrollController.hasClients && 
+    if (_scrollController.hasClients &&
         _scrollController.position.maxScrollExtent < MediaQuery.of(context).size.height) {
-       context.read<WallpaperProvider>().fetchWallpapers();
+      final provider = context.read<WallpaperProvider>();
+      if (provider.hasMore && !provider.isLoading) {
+        await provider.fetchWallpapers();
+        // Recursively check again
+        await _checkLoadMore(loadedCount: loadedCount + 1);
+      }
     }
   }
 
@@ -113,48 +127,64 @@ class _HomeScreenState extends State<HomeScreen> {
             : Text(l10n.appTitle),
         actions: [
           IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FilterScreen()),
+              );
+            },
+          ),
+          IconButton(
             icon: Icon(_showSearchBar ? Icons.close : Icons.search),
             onPressed: _toggleSearchBar,
           ),
         ],
       ),
       drawer: _buildDrawer(context, l10n),
-      body: Consumer<WallpaperProvider>(
-        builder: (context, provider, child) {
-          if (provider.wallpapers.isEmpty && provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          const FilterToolbar(),
+          Expanded(
+            child: Consumer<WallpaperProvider>(
+              builder: (context, provider, child) {
+                if (provider.wallpapers.isEmpty && provider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
-          if (provider.wallpapers.isEmpty) {
-            return Center(child: Text(l10n.noWallpapersFound));
-          }
+                if (provider.wallpapers.isEmpty) {
+                  return Center(child: Text(l10n.noWallpapersFound));
+                }
 
-          return MasonryGridView.count(
-            controller: _scrollController,
-            crossAxisCount: crossAxisCount,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
-            itemCount: provider.wallpapers.length + (provider.hasMore ? 1 : 0),
-            itemBuilder: (context, index) {
-              if (index == provider.wallpapers.length) {
-                return const Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(),
-                  ),
+                return MasonryGridView.count(
+                  controller: _scrollController,
+                  crossAxisCount: crossAxisCount,
+                  mainAxisSpacing: 4,
+                  crossAxisSpacing: 4,
+                  itemCount: provider.wallpapers.length + (provider.hasMore ? 1 : 0),
+                  itemBuilder: (context, index) {
+                    if (index == provider.wallpapers.length) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: CircularProgressIndicator(),
+                        ),
+                      );
+                    }
+                    final wallpaper = provider.wallpapers[index];
+                    // Calculate aspect ratio for the container
+                    final aspectRatio = wallpaper.dimensionX / wallpaper.dimensionY;
+
+                    return AspectRatio(
+                      aspectRatio: aspectRatio,
+                      child: WallpaperGridItem(wallpaper: wallpaper),
+                    );
+                  },
                 );
-              }
-              final wallpaper = provider.wallpapers[index];
-              // Calculate aspect ratio for the container
-              final aspectRatio = wallpaper.dimensionX / wallpaper.dimensionY;
-
-              return AspectRatio(
-                aspectRatio: aspectRatio,
-                child: WallpaperGridItem(wallpaper: wallpaper),
-              );
-            },
-          );
-        },
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -299,63 +329,17 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
               ),
-              SwitchListTile(
-                title: Text(l10n.aiArt),
-                value: provider.params.aiArtFilter == 0,
-                activeColor: activeColor,
-                onChanged: (bool value) {
-                  final newParams = provider.params;
-                  newParams.aiArtFilter = value ? 0 : 1;
-                  provider.updateSearchParams(newParams);
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.filter_list),
+                title: Text(l10n.categories), // Using 'Categories' or a more generic 'Search Filters' label
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const FilterScreen()),
+                  );
                 },
-              ),
-              ExpansionTile(
-                title: Text(l10n.categories),
-                initiallyExpanded: true,
-                children: [
-                  SwitchListTile(
-                    title: Text(l10n.general),
-                    value: categories[0] == '1',
-                    activeColor: activeColor,
-                    onChanged: (val) => provider.setCategory(general: val),
-                  ),
-                  SwitchListTile(
-                    title: Text(l10n.anime),
-                    value: categories[1] == '1',
-                    activeColor: activeColor,
-                    onChanged: (val) => provider.setCategory(anime: val),
-                  ),
-                  SwitchListTile(
-                    title: Text(l10n.people),
-                    value: categories[2] == '1',
-                    activeColor: activeColor,
-                    onChanged: (val) => provider.setCategory(people: val),
-                  ),
-                ],
-              ),
-              ExpansionTile(
-                title: Text(l10n.purity),
-                initiallyExpanded: true,
-                children: [
-                  SwitchListTile(
-                    title: Text(l10n.sfw),
-                    value: purity[0] == '1',
-                    activeColor: activeColor,
-                    onChanged: (val) => provider.setPurity(sfw: val),
-                  ),
-                  SwitchListTile(
-                    title: Text(l10n.sketchy),
-                    value: purity[1] == '1',
-                    activeColor: activeColor,
-                    onChanged: (val) => provider.setPurity(sketchy: val),
-                  ),
-                  SwitchListTile(
-                    title: Text(l10n.nsfw),
-                    value: purity.length > 2 && purity[2] == '1',
-                    activeColor: activeColor,
-                    onChanged: (val) => provider.setPurity(nsfw: val),
-                  ),
-                ],
               ),
               const Divider(),
               ListTile(
